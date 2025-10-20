@@ -1,28 +1,17 @@
-// STEP 3: Using fetch with .then()
+// STEP 3: Example fetch with .then()
 function fetchProductsThen() {
   fetch('https://www.course-api.com/javascript-store-products')
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then(data => {
-      console.log('--- Products fetched with .then() ---');
-      data.forEach(product => {
-        console.log(product.fields.name);
-      });
-    })
+    .then(response => response.json())
+    .then(() => console.log('Fetched API data (not used, replaced with Pilates products)'))
     .catch(error => handleError(error));
 }
 
-// STEP 4: Using async/await
+// STEP 4: Async/Await version
 async function fetchProductsAsync() {
   try {
-    const response = await fetch('https://www.course-api.com/javascript-store-products');
-    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-    const products = await response.json();
-    displayProducts(products);
+    console.log('Using custom Pilates products instead of API data');
+    const pilatesProducts = getPilatesProducts();
+    displayProducts(pilatesProducts);
   } catch (error) {
     handleError(error);
   }
@@ -31,35 +20,21 @@ async function fetchProductsAsync() {
 // STEP 5: Display products
 function displayProducts(products) {
   const container = document.getElementById('product-container');
-  container.innerHTML = ''; // clear container first
+  container.innerHTML = '';
 
-  products.slice(0, 5).forEach(product => {
-    const { name, price, image } = product.fields;
-
+  products.forEach(product => {
     const card = document.createElement('div');
     card.classList.add('product-card');
 
     const img = document.createElement('img');
-    img.src = image[0].url;
-    img.alt = name;
+    img.src = product.image;
+    img.alt = product.name;
 
     const title = document.createElement('h2');
-    title.textContent = name;
+    title.textContent = product.name;
 
     const priceTag = document.createElement('p');
-    priceTag.textContent = `$${(price / 100).toFixed(2)}`;
+    priceTag.textContent = `$${product.price.toFixed(2)}`;
 
     card.append(img, title, priceTag);
     container.appendChild(card);
-  });
-}
-
-
-// STEP 6: Error handler
-function handleError(error) {
-  console.error(`An error occurred: ${error.message}`);
-}
-
-// STEP 7: Call both functions
-fetchProductsThen();
-fetchProductsAsync();
