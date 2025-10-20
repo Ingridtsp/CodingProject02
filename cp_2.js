@@ -27,3 +27,29 @@ async function fetchProductsAsync() {
     handleError(error);
   }
 }
+
+// STEP 5: Display products
+function displayProducts(products) {
+  const container = document.getElementById('product-container');
+  container.innerHTML = ''; // clear container first
+
+  products.slice(0, 5).forEach(product => {
+    const { name, price, image } = product.fields;
+
+    const card = document.createElement('div');
+    card.classList.add('product-card');
+
+    const img = document.createElement('img');
+    img.src = image[0].url;
+    img.alt = name;
+
+    const title = document.createElement('h2');
+    title.textContent = name;
+
+    const priceTag = document.createElement('p');
+    priceTag.textContent = `$${(price / 100).toFixed(2)}`;
+
+    card.append(img, title, priceTag);
+    container.appendChild(card);
+  });
+}
